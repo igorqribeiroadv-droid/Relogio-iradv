@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relógio - Igor Ribeiro Advocacia</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: monospace;
+    }
+
+    .ira-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 2rem;
+    }
+
+    .ira-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .ira-pair {
+      display: flex;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .ira-unit {
+      position: relative;
+      width: 64px;
+      height: 80px;
+      background: #2c3f2b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ira-unit:first-child {
+      border-right: 1px solid #1a2619;
+    }
+
+    .ira-unit .bot {
+      font-size: 52px;
+      font-weight: 700;
+      color: #f0f4f0;
+      font-family: monospace;
+      line-height: 1;
+      z-index: 1;
+    }
+
+    .ira-top {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 50%;
+      background: #364c35;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 2;
+    }
+
+    .ira-top span {
+      font-size: 52px;
+      font-weight: 700;
+      color: #f0f4f0;
+      font-family: monospace;
+      line-height: 1;
+      transform: translateY(50%);
+    }
+
+    .ira-line {
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      height: 1px;
+      background: rgba(0, 0, 0, 0.2);
+      z-index: 5;
+      transform: translateY(-50%);
+    }
+
+    .ira-sep {
+      font-size: 44px;
+      font-weight: 700;
+      color: #2c3f2b;
+      font-family: monospace;
+      line-height: 1;
+    }
+
+    .ira-label {
+      font-size: 11px;
+      color: #7a8c79;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .do-flip {
+      animation: iraFlip 0.32s ease;
+    }
+
+    @keyframes iraFlip {
+      0%   { transform: scaleY(1); }
+      45%  { transform: scaleY(0.05); }
+      100% { transform: scaleY(1); }
+    }
+  </style>
+</head>
+<body>
+  <div class="ira-wrap">
+    <div class="ira-row">
+      <div class="ira-pair">
+        <div class="ira-unit" id="u-h1"><div class="ira-top"><span id="t-h1">0</span></div><span class="bot" id="b-h1">0</span><div class="ira-line"></div></div>
+        <div class="ira-unit" id="u-h2"><div class="ira-top"><span id="t-h2">0</span></div><span class="bot" id="b-h2">0</span><div class="ira-line"></div></div>
+      </div>
+      <span class="ira-sep">:</span>
+      <div class="ira-pair">
+        <div class="ira-unit" id="u-m1"><div class="ira-top"><span id="t-m1">0</span></div><span class="bot" id="b-m1">0</span><div class="ira-line"></div></div>
+        <div class="ira-unit" id="u-m2"><div class="ira-top"><span id="t-m2">0</span></div><span class="bot" id="b-m2">0</span><div class="ira-line"></div></div>
+      </div>
+      <span class="ira-sep">:</span>
+      <div class="ira-pair">
+        <div class="ira-unit" id="u-s1"><div class="ira-top"><span id="t-s1">0</span></div><span class="bot" id="b-s1">0</span><div class="ira-line"></div></div>
+        <div class="ira-unit" id="u-s2"><div class="ira-top"><span id="t-s2">0</span></div><span class="bot" id="b-s2">0</span><div class="ira-line"></div></div>
+      </div>
+    </div>
+    <p class="ira-label">Igor Ribeiro Advocacia</p>
+  </div>
+
+  <script>
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function setD(id, val, anim) {
+      var b = document.getElementById('b-' + id);
+      var t = document.getElementById('t-' + id);
+      var u = document.getElementById('u-' + id);
+      if (!b || !t || !u) return;
+      if (anim) {
+        u.classList.remove('do-flip');
+        void u.offsetWidth;
+        u.classList.add('do-flip');
+        setTimeout(function () { u.classList.remove('do-flip'); }, 320);
+      }
+      b.textContent = val;
+      t.textContent = val;
+    }
+
+    var prev = {};
+
+    function tick() {
+      var now = new Date();
+      var h = pad(now.getHours());
+      var m = pad(now.getMinutes());
+      var s = pad(now.getSeconds());
+      setD('h1', h[0], prev.h0 !== h[0]);
+      setD('h2', h[1], prev.h1 !== h[1]);
+      setD('m1', m[0], prev.m0 !== m[0]);
+      setD('m2', m[1], prev.m1 !== m[1]);
+      setD('s1', s[0], prev.s0 !== s[0]);
+      setD('s2', s[1], prev.s1 !== s[1]);
+      prev = { h0: h[0], h1: h[1], m0: m[0], m1: m[1], s0: s[0], s1: s[1] };
+    }
+
+    tick();
+    setInterval(tick, 1000);
+  </script>
+</body>
+</html>
