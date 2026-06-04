@@ -20,8 +20,17 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1.25rem;
+      gap: 1rem;
       padding: 2rem;
+    }
+
+    .ira-date {
+      font-family: monospace;
+      font-size: 15px;
+      font-weight: 700;
+      color: #2c3f2b;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
     .ira-row {
@@ -97,13 +106,6 @@
       line-height: 1;
     }
 
-    .ira-label {
-      font-size: 11px;
-      color: #7a8c79;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
     .do-flip {
       animation: iraFlip 0.32s ease;
     }
@@ -117,6 +119,7 @@
 </head>
 <body>
   <div class="ira-wrap">
+    <div class="ira-date" id="ira-date-txt"></div>
     <div class="ira-row">
       <div class="ira-pair">
         <div class="ira-unit" id="u-h1"><div class="ira-top"><span id="t-h1">0</span></div><span class="bot" id="b-h1">0</span><div class="ira-line"></div></div>
@@ -136,6 +139,9 @@
   </div>
 
   <script>
+    var dias = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+    var meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
     function pad(n) { return String(n).padStart(2, '0'); }
 
     function setD(id, val, anim) {
@@ -167,6 +173,11 @@
       setD('s1', s[0], prev.s0 !== s[0]);
       setD('s2', s[1], prev.s1 !== s[1]);
       prev = { h0: h[0], h1: h[1], m0: m[0], m1: m[1], s0: s[0], s1: s[1] };
+
+      var d = document.getElementById('ira-date-txt');
+      if (d) {
+        d.textContent = dias[now.getDay()] + ', ' + now.getDate() + ' de ' + meses[now.getMonth()] + ' de ' + now.getFullYear();
+      }
     }
 
     tick();
